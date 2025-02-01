@@ -32,3 +32,14 @@ function updateStockProducto(int $idProduct, $stock)
 {
     ProductoController::updateStock($idProduct, $stock);
 }
+
+function ordenarProducto(array $productos): array
+{
+    function compareProductos($producto1, $producto2)
+    {
+        return $producto1->getNombre() > $producto2->getNombre();
+    }
+    usort($productos, "compareNombres");
+    return $productos;
+}
+

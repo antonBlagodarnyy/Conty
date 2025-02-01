@@ -1,6 +1,6 @@
 <?php
 class Database {
-    private static $host = 'db:3306';
+    private static $host = 'localhost:3307';
     private static $username = 'conty_admin';
     private static $password = 'admin2025';
     private static $dbname = 'conty';

@@ -1,6 +1,6 @@
 <?php
-require_once (__DIR__."/../config/database.php"); // Database connection file
-
+require_once(__DIR__ . "/../config/database.php"); // Database connection file
+require_once(__DIR__ . "/../service/ProductoService.php");
 class CitaController
 {
 
@@ -10,9 +10,7 @@ class CitaController
         $db = Database::getConnection();
         $query = "SELECT * 
 FROM Cita 
-LEFT JOIN CitaProducto ON Cita.idCita = CitaProducto.idCitaR
-LEFT JOIN Producto ON CitaProducto.idProductoR = Producto.idProducto;
-";
+LEFT JOIN CitaProducto ON Cita.idCita = CitaProducto.idCitaR;";
         $result = $db->query($query);
         return $result->fetch_all(MYSQLI_ASSOC);
     }
@@ -32,28 +30,30 @@ LEFT JOIN Producto ON CitaProducto.idProductoR = Producto.idProducto;
     // POST new cita
     public static function createPlainCita($data): int
     {
-        $query = "INSERT INTO Cita (fecha, idCliente, costes, cobro) VALUES (?, ?, ?, ?)";
+        $query = "INSERT INTO Cita (fecha, nombreCliente, trabajo, costes, cobro) VALUES (?, ?, ?, ?, ?)";
         $stmt = Database::getConnection()->prepare($query);
 
+        $trabajo = $data['trabajo'];
         $fecha = $data['fecha'];
-        $idCliente = $data['clienteId'];
+        $clienteNombre = $data['clienteNombre'];
         $costes = $data['costes'];
         $cobro = $data['cobro'];
 
-        $stmt->bind_param("siid", $fecha, $idCliente, $costes, $cobro);
+        $stmt->bind_param("sssdd", $fecha, $clienteNombre, $trabajo, $costes, $cobro);
 
         $stmt->execute();
 
         return $stmt->insert_id;
     }
-    public static function addProducts($idProducto, $cita,$cantidad)
+    public static function addProducts($idProducto, $cita, $cantidad)
     {
-        $query = "INSERT INTO CitaProducto (idCitaR, idProductoR,cantidad) VALUES (?, ?, ?)";
-        $stmt = Database::getConnection()->prepare($query);
+        $query = "INSERT INTO CitaProducto (idCitaR, citaProductoNombre,cantidad) VALUES (?, ?, ?)";
+
 
         $idCita = $cita['idCita'];
-
-        $stmt->bind_param("iii", $idCita, $idProducto,$cantidad);
+        $productoNombre = getProductById($idProducto)->getNombre();
+        $stmt = Database::getConnection()->prepare($query);
+        $stmt->bind_param("isd", $idCita, $productoNombre, $cantidad);
 
         if ($stmt->execute()) {
             return json_encode(['message' => 'Cita created successfully']);
@@ -95,6 +95,4 @@ LEFT JOIN Producto ON CitaProducto.idProductoR = Producto.idProducto;
             return json_encode(['error' => 'Failed to delete cita']);
         }
     }
-
- 
 }

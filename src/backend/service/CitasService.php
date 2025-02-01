@@ -21,15 +21,16 @@ function getAllCitasObj()
             $citas[$idCita] = new Cita(
                 $idCita,
                 date_create_from_format('Y-m-d H:i:s', $row['fecha']),
-                getClientById($row['idCliente']),
+                $row['nombreCliente'],
+                $row['trabajo'],
                 [], // Initialize with an empty array of productos
                 (float)$row['costes'],
                 (float)$row['cobro']
             );
         }
-        if (!is_null($row['idProducto'])) {
+        if (!is_null($row['citaProductoNombre'])) {
             // Create a Producto object for each product in the row
-            $producto = new Producto($row['idProducto'], $row['nombre'], (float)$row['precio'], (int)$row['stockGramos']);
+            $producto = $row['citaProductoNombre'];
             $cantidad = $row['cantidad'];
 
             // Add the Producto to the Cita's productos array using a method
@@ -68,7 +69,6 @@ function crearCita($data): void
 function deleteCita($idCita)
 {
     CitaController::delete($idCita);
-
 }
 
 function getBeneficiosTotales(array $citas): float
@@ -98,7 +98,7 @@ function getCobrosTotales(array $citas): float
     return $cobrosTotales;
 }
 
-function filtrarCitasPorAnio(string $anio, array $citas): array//TODO implementarlo
+function filtrarCitasPorAnio(string $anio, array $citas): array //TODO implementarlo
 {
     $comprobarAnio = function ($cita) use ($anio) {
         $numeroAnioCita = $cita->getFecha()->format('y'); // Get the numeric month (01-12)
@@ -122,4 +122,14 @@ function filtrarCitasPorMes(string $mes, array $citas): array
     };
 
     return  array_filter($citas, $comprobarMes);
+}
+
+function ordenarCitas(array $citas): array
+{
+    function compareDates($cita1, $cita2)
+    {
+        return $cita1->getFecha() > $cita2->getFecha();
+    }
+    usort($citas, "compareDates");
+    return $citas;
 }

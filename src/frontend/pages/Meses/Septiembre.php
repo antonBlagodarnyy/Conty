@@ -20,7 +20,7 @@
     
         <div class="titulo">
         <h3>Citas del mes de Septiembre</h3>
-        <li><a href="/frontend/display.php">Volver</a></li>
+        <li><a href="../../display.php">Volver</a></li>
         </div>
         <div class="datos">
         <table>
@@ -37,11 +37,12 @@
                     <?php
                     $citasAll = getAllCitasObj();
                     $citas =filtrarCitasPorMes("09",$citasAll);
+                    $citas =  ordenarCitas($citas);
                     foreach ($citas as $cita):
                     ?>
                         <tr>
                             <td><?= date_format($cita->getFecha(), "Y/m/d") ?></td>
-                            <td><?= $cita->getCliente()->getNombre() ?></td>
+                            <td><?= $cita->getCliente()?></td>
                             <td>
                                 <?php if (count($cita->getProductos()) > 0): ?>
                                     <table>

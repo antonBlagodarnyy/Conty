@@ -25,4 +25,15 @@ function createCliente(array $data):void{
     ClienteController::create($data);
 }
 
+function ordenarCliente(array $cliente): array
+{
+    function compareNombres($cliente1, $cliente2)
+    {
+        return $cliente1->getNombre() > $cliente2->getNombre();
+    }
+    usort($cliente, "compareNombres");
+    return $cliente;
+}
+
+
 ?>

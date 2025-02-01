@@ -5,7 +5,7 @@
 		$uri = 'http://';
 	}
 	$uri .= $_SERVER['HTTP_HOST'];
-	header('Location: '.$uri.'/frontend/display.php');
+	header('Location: '.$uri.'/src/frontend/display.php');
 	exit;
 ?>
 Something is wrong with the installation :-(

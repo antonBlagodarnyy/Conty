@@ -4,16 +4,17 @@ class Cita
     private $idCita;
     private $fecha;
     private $cliente;
+    private $trabajo;
     private $productos = [];
     private $costes;
     private $cobro;
 
-    function __construct(int $idCita, DateTime $fecha, $cliente, array $productos, float $costes, float $cobro)
+    function __construct(int $idCita, DateTime $fecha,string $cliente,string $trabajo, array $productos, float $costes, float $cobro)
     {
         $this->idCita = $idCita; // ID único para la cita
         $this->fecha = $fecha;
         $this->cliente = $cliente;
-
+        $this->trabajo = $trabajo;
         $this->costes = $costes;
         $this->cobro = $cobro;
 
@@ -32,9 +33,13 @@ class Cita
         return $this->fecha;
     }
 
-    public function getCliente()
+    public function getCliente():string
     {
         return $this->cliente;
+    }
+    public function getTrabajo() :string
+    {
+        return $this->trabajo;
     }
 
     public function getProductos(): array

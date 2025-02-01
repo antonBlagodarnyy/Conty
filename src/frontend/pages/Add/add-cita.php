@@ -5,7 +5,7 @@ require_once(__DIR__ . "/../../../backend/service/CitasService.php");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $clienteId = $_POST['cliente'];
+    $clienteNombre = $_POST['cliente'];
 
     // Extract selected product IDs and their quantities
     $productosSeleccionados = isset($_POST['productos']) ? $_POST['productos'] : [];
@@ -23,13 +23,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+    $trabajo = $_POST['trabajo'];
     $fecha = $_POST['fecha'];
     $costes = floatval($_POST['costes']);
     $cobro = floatval($_POST['cobro']);
 
     $data = [
-        'clienteId' => $clienteId,
+        'clienteNombre' => $clienteNombre,
         'productos' => $productosFinal, // 2D array of product IDs and quantities
+        'trabajo' => $trabajo,
         'fecha' => $fecha,
         'costes' => $costes,
         'cobro' => $cobro
@@ -77,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php
             $clientes = getAllClients();
             foreach ($clientes as $index => $cliente): ?>
-                <option value="<?= htmlspecialchars($cliente->getIdCliente()) ?>"><?= htmlspecialchars($cliente->getNombre()) ?></option>
+                <option value="<?= htmlspecialchars($cliente->getNombre()) ?>"><?= htmlspecialchars($cliente->getNombre()) ?></option>
             <?php endforeach; ?>
         </select>
         <br>
@@ -95,7 +97,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         <?php endforeach; ?>
 
-
+        <label for="trabajo">Trabajo:</label>
+        <input type="text" name="trabajo" required>
 
         <label for="fecha">Fecha:</label>
         <input type="datetime-local" name="fecha" required>
